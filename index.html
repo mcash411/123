@@ -1,0 +1,87 @@
+/**
+ * 計算前 13 碼數字的 Luhn 檢查碼 (第 14 碼)
+ * @param {string} payload13 - 13 碼純數字字串
+ * @returns {number} 1 碼檢查碼 (0-9)
+ */
+function calculateLuhnCheckDigit(payload13) {
+  if (!/^\d{13}$/.test(payload13)) {
+    throw new Error('輸入格式錯誤：必須為 13 碼純數字');
+  }
+
+  let sum = 0;
+
+  // 從右至左遍歷（最右邊的第 13 位權重為 1）
+  for (let i = payload13.length - 1; i >= 0; i--) {
+    let digit = parseInt(payload13.charAt(i), 10);
+    const positionFromRight = payload13.length - i;
+
+    // 偶數位 (從右往左數第 2, 4, 6... 位) 乘以 2
+    if (positionFromRight % 2 === 0) {
+      digit *= 2;
+      if (digit > 9) {
+        digit -= 9; // 等同於十位數 + 個位數
+      }
+    }
+
+    sum += digit;
+  }
+
+  // 計算檢查碼
+  const remainder = sum % 10;
+  return remainder === 0 ? 0 : 10 - remainder;
+}
+
+/**
+ * 前端生成 14 碼超商專用 Token
+ * @param {string} prefix - 渠道前綴 (如 3 碼 '711')
+ * @returns {string} 14 碼帶檢查碼的 Token
+ */
+function generate14DigitToken(prefix = '711') {
+  // 1. 取得日期 YYMMDD (6 碼)，例如 260901
+  const now = new Date();
+  const yy = String(now.getFullYear()).slice(-2);
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  const dateStr = `${yy}${mm}${dd}`;
+
+  // 2. 隨機 4 碼流水號 (0000 - 9999)
+  const randomSeq = String(Math.floor(Math.random() * 10000)).padStart(4, '0');
+
+  // 3. 組合前 13 碼 (3 + 6 + 4 = 13 碼)
+  const base13 = `${prefix}${dateStr}${randomSeq}`;
+
+  // 4. 計算第 14 碼檢查碼
+  const checkDigit = calculateLuhnCheckDigit(base13);
+
+  // 5. 輸出完整 14 碼 Token
+  return `${base13}${checkDigit}`;
+}
+
+/**
+ * 驗證 14 碼 Token 是否符合 Luhn 演算法
+ * @param {string} token14 - 完整 14 碼 Token
+ * @returns {boolean} 是否合法
+ */
+function validateLuhnToken(token14) {
+  if (!/^\d{14}$/.test(token14)) return false;
+
+  const base13 = token14.slice(0, 13);
+  const expectedCheckDigit = parseInt(token14.slice(13), 10);
+
+  return calculateLuhnCheckDigit(base13) === expectedCheckDigit;
+}
+
+// ==================== 測試執行 ==================== //
+
+// 產生 Token
+const token = generate14DigitToken('711');
+console.log('生成的 14 碼 Token:', token); 
+// 輸出範例： 71126090198218
+
+// 驗證生成的 Token
+const isValid = validateLuhnToken(token);
+console.log('Token 驗證結果:', isValid ? '通過 (Valid)' : '失敗 (Invalid)');
+
+// 測試刷錯一個數字時的驗證
+const badToken = token.slice(0, 12) + '9' + token.slice(13); // 倒數第二碼打錯
+console.log('打錯單碼的驗證結果:', validateLuhnToken(badToken)); // 輸出: false
