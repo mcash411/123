@@ -1,87 +1,454 @@
-/**
- * 計算前 13 碼數字的 Luhn 檢查碼 (第 14 碼)
- * @param {string} payload13 - 13 碼純數字字串
- * @returns {number} 1 碼檢查碼 (0-9)
- */
-function calculateLuhnCheckDigit(payload13) {
-  if (!/^\d{13}$/.test(payload13)) {
-    throw new Error('輸入格式錯誤：必須為 13 碼純數字');
-  }
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>條碼與二維條碼產生/辨識系統</title>
+    <!-- 引入 JsBarcode (繪製一維條碼) -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <!-- 引入 QRCode.js (繪製 QR Code) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- 引入 ZXing (掃描辨識套件) -->
+    <script src="https://unpkg.com/@zxing/library@latest"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f5f5f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+        }
+        h2 { margin-top: 0; color: #333; }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        .tip { font-size: 12px; color: #777; margin-top: 4px; }
+        .json-preview {
+            background: #272822;
+            color: #a6e22e;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 11px;
+            text-align: left;
+            margin-top: 8px;
+            word-break: break-all;
+            white-space: pre-wrap;
+            display: none;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-primary:hover { background-color: #0056b3; }
+        .btn-scan { background-color: #28a745; color: white; }
+        .btn-scan:hover { background-color: #218838; }
+        
+        .preview-area {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px dashed #ddd;
+            border-radius: 6px;
+            background: #fafafa;
+            min-height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        #error-msg {
+            color: #d9534f;
+            font-size: 13px;
+            margin-top: 8px;
+            display: none;
+        }
 
-  let sum = 0;
+        /* 鏡頭掃描視窗 Modal */
+        .scanner-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        .video-box {
+            position: relative;
+            width: 90%;
+            max-width: 400px;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .scan-laser {
+            position: absolute;
+            top: 50%;
+            left: 5%;
+            width: 90%;
+            height: 2px;
+            background: red;
+            box-shadow: 0 0 8px red;
+        }
+        .btn-close {
+            margin-top: 15px;
+            background: #dc3545;
+            color: white;
+            padding: 8px 25px;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
 
-  // 從右至左遍歷（最右邊的第 13 位權重為 1）
-  for (let i = payload13.length - 1; i >= 0; i--) {
-    let digit = parseInt(payload13.charAt(i), 10);
-    const positionFromRight = payload13.length - i;
+<div class="container">
+    <h2>條碼與二維條碼產生器</h2>
+    
+    <div class="form-group">
+        <label for="barcodeType">選擇條碼類型</label>
+        <select id="barcodeType" onchange="validateAndUpdate()">
+            <option value="QRCODE">QR Code (二維條碼 - JSON 格式)</option>
+            <option value="CODE128">Code 128 (一維 - 英數字/通用)</option>
+            <option value="EAN13">EAN-13 (一維 - 12~13碼數字)</option>
+            <option value="EAN8">EAN-8 (一維 - 7~8碼數字)</option>
+        </select>
+    </div>
 
-    // 偶數位 (從右往左數第 2, 4, 6... 位) 乘以 2
-    if (positionFromRight % 2 === 0) {
-      digit *= 2;
-      if (digit > 9) {
-        digit -= 9; // 等同於十位數 + 個位數
-      }
+    <!-- 輸入欄位區 -->
+    <div class="form-group">
+        <div class="form-row">
+            <div style="flex: 2;">
+                <label for="barcodeData">條碼內容 (Barcode)</label>
+                <input type="text" id="barcodeData" placeholder="請輸入條碼內容" value="471123456789" oninput="validateAndUpdate()">
+            </div>
+            <div style="flex: 1;" id="qtyGroup">
+                <label for="barcodeQty">數量 (Qty)</label>
+                <input type="number" id="barcodeQty" value="1" min="1" oninput="validateAndUpdate()">
+            </div>
+        </div>
+        <div class="tip" id="tipText">💡 自動裝載為 POS JSON 格式並產生二維條碼</div>
+        <div class="json-preview" id="jsonPreview"></div>
+    </div>
+
+    <div id="error-msg"></div>
+
+    <div class="btn-group">
+        <button class="btn-scan" onclick="startScanner()">📷 掃描辨識條碼</button>
+        <button class="btn-primary" onclick="downloadBarcode()">💾 下載條碼 PNG</button>
+    </div>
+
+    <div class="preview-area">
+        <canvas id="barcodeCanvas" style="display: none;"></canvas>
+        <div id="qrcodeContainer"></div>
+    </div>
+</div>
+
+<!-- 鏡頭掃描視窗 Modal -->
+<div class="scanner-modal" id="scannerModal">
+    <div class="video-box">
+        <video id="videoPreview" playsinline></video>
+        <div class="scan-laser"></div>
+    </div>
+    <p style="margin-top: 10px;">請將條碼對準紅線進行自動辨識...</p>
+    <button class="btn-close" onclick="stopScanner()">關閉鏡頭</button>
+</div>
+
+<script>
+    let qrcodeObj = null;
+    let codeReader = null;
+    let scanStream = null;
+    let isScanning = false;
+
+    window.onload = function() {
+        validateAndUpdate();
+    };
+
+    function validateAndUpdate() {
+        const type = document.getElementById('barcodeType').value;
+        const data = document.getElementById('barcodeData').value.trim();
+        const qtyInput = document.getElementById('barcodeQty');
+        const qtyVal = parseInt(qtyInput.value, 10) || 1;
+
+        const qtyGroup = document.getElementById('qtyGroup');
+        const tipText = document.getElementById('tipText');
+        const jsonPreview = document.getElementById('jsonPreview');
+        const errorMsg = document.getElementById('error-msg');
+        
+        const canvas = document.getElementById('barcodeCanvas');
+        const qrContainer = document.getElementById('qrcodeContainer');
+
+        errorMsg.style.display = 'none';
+
+        if (type === 'QRCODE') {
+            qtyGroup.style.display = 'block'; // 顯示數量輸入框
+            tipText.innerText = '💡 自動封裝為 POS JSON 格式二維條碼';
+
+            const jsonStructure = {
+                "Goods": [
+                    {
+                        "Commodity": [
+                            {
+                                "Device": "POS",
+                                "Barcode": data,
+                                "Quantity": qtyVal
+                            }
+                        ]
+                    }
+                ]
+            };
+            jsonPreview.innerText = JSON.stringify(jsonStructure, null, 2);
+            jsonPreview.style.display = 'block';
+
+            // 顯示 QR Code，隱藏一維 Canvas
+            canvas.style.display = 'none';
+            qrContainer.style.display = 'block';
+            qrContainer.innerHTML = '';
+
+            if (data) {
+                qrcodeObj = new QRCode(qrContainer, {
+                    text: JSON.stringify(jsonStructure),
+                    width: 160,
+                    height: 160,
+                    colorDark : "#000000",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                });
+            }
+            return;
+        }
+
+        // 一維條碼處理邏輯
+        qtyGroup.style.display = 'none'; // 隱藏數量輸入框
+        jsonPreview.style.display = 'none';
+        canvas.style.display = 'block';
+        qrContainer.style.display = 'none';
+
+        if (type === 'CODE128') {
+            tipText.innerText = '💡 支援大小寫英文、數字與符號';
+        } else if (type === 'EAN13') {
+            tipText.innerText = '💡 需輸入 12 碼或 13 碼純數字';
+        } else if (type === 'EAN8') {
+            tipText.innerText = '💡 需輸入 7 碼或 8 碼純數字';
+        }
+
+        if (!data) return;
+
+        if ((type === 'EAN13' || type === 'EAN8') && !/^\d+$/.test(data)) {
+            showError("EAN 格式僅支援純數字！");
+            return;
+        }
+        if (type === 'EAN13' && !(data.length === 12 || data.length === 13)) {
+            showError("EAN-13 需要 12 或 13 位數字！");
+            return;
+        }
+        if (type === 'EAN8' && !(data.length === 7 || data.length === 8)) {
+            showError("EAN-8 需要 7 或 8 位數字！");
+            return;
+        }
+
+        try {
+            JsBarcode("#barcodeCanvas", data, {
+                format: type,
+                lineColor: "#000",
+                width: 2,
+                height: 80,
+                displayValue: true
+            });
+        } catch (e) {
+            showError("條碼格式不正確或檢查碼錯誤！");
+        }
     }
 
-    sum += digit;
-  }
+    function showError(msg) {
+        const errorMsg = document.getElementById('error-msg');
+        errorMsg.innerText = msg;
+        errorMsg.style.display = 'block';
+    }
 
-  // 計算檢查碼
-  const remainder = sum % 10;
-  return remainder === 0 ? 0 : 10 - remainder;
-}
+    function downloadBarcode() {
+        const type = document.getElementById('barcodeType').value;
+        const data = document.getElementById('barcodeData').value.trim();
 
-/**
- * 前端生成 14 碼超商專用 Token
- * @param {string} prefix - 渠道前綴 (如 3 碼 '711')
- * @returns {string} 14 碼帶檢查碼的 Token
- */
-function generate14DigitToken(prefix = '711') {
-  // 1. 取得日期 YYMMDD (6 碼)，例如 260901
-  const now = new Date();
-  const yy = String(now.getFullYear()).slice(-2);
-  const mm = String(now.getMonth() + 1).padStart(2, '0');
-  const dd = String(now.getDate()).padStart(2, '0');
-  const dateStr = `${yy}${mm}${dd}`;
+        if (!data) {
+            alert("請先輸入條碼內容！");
+            return;
+        }
 
-  // 2. 隨機 4 碼流水號 (0000 - 9999)
-  const randomSeq = String(Math.floor(Math.random() * 10000)).padStart(4, '0');
+        const link = document.createElement('a');
 
-  // 3. 組合前 13 碼 (3 + 6 + 4 = 13 碼)
-  const base13 = `${prefix}${dateStr}${randomSeq}`;
+        if (type === 'QRCODE') {
+            const img = document.querySelector('#qrcodeContainer img');
+            if (img) {
+                link.download = `qrcode_pos_${data}.png`;
+                link.href = img.src;
+                link.click();
+            } else {
+                alert("QR Code 尚未建立成功！");
+            }
+        } else {
+            const canvas = document.getElementById('barcodeCanvas');
+            link.download = `barcode_${type}_${data}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        }
+    }
 
-  // 4. 計算第 14 碼檢查碼
-  const checkDigit = calculateLuhnCheckDigit(base13);
+    // ================= 鏡頭自動辨識功能 (支援 1D + QR Code) =================
+    async function startScanner() {
+        document.getElementById('scannerModal').style.display = 'flex';
+        isScanning = true;
 
-  // 5. 輸出完整 14 碼 Token
-  return `${base13}${checkDigit}`;
-}
+        const video = document.getElementById('videoPreview');
 
-/**
- * 驗證 14 碼 Token 是否符合 Luhn 演算法
- * @param {string} token14 - 完整 14 碼 Token
- * @returns {boolean} 是否合法
- */
-function validateLuhnToken(token14) {
-  if (!/^\d{14}$/.test(token14)) return false;
+        // 原生 BarcodeDetector API 優先
+        if ('BarcodeDetector' in window) {
+            try {
+                scanStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: "environment" } 
+                });
+                video.srcObject = scanStream;
+                await video.play();
 
-  const base13 = token14.slice(0, 13);
-  const expectedCheckDigit = parseInt(token14.slice(13), 10);
+                const barcodeDetector = new BarcodeDetector({ 
+                    formats: ['qr_code', 'code_128', 'ean_13', 'ean_8'] 
+                });
 
-  return calculateLuhnCheckDigit(base13) === expectedCheckDigit;
-}
+                const detectFrame = async () => {
+                    if (!isScanning) return;
+                    try {
+                        const barcodes = await barcodeDetector.detect(video);
+                        if (barcodes.length > 0) {
+                            handleScannedResult(barcodes[0].rawValue, barcodes[0].format);
+                            return;
+                        }
+                    } catch (e) {}
+                    requestAnimationFrame(detectFrame);
+                };
+                detectFrame();
+                return;
+            } catch (err) {}
+        }
 
-// ==================== 測試執行 ==================== //
+        // ZXing 備援方案
+        try {
+            codeReader = new ZXing.BrowserMultiFormatReader();
+            codeReader.decodeFromVideoDevice(null, 'videoPreview', (result, err) => {
+                if (result && isScanning) {
+                    handleScannedResult(result.getText(), result.getBarcodeFormat());
+                }
+            });
+        } catch (err) {
+            alert("無法存取攝影機，請確保已授權視訊權限！");
+            stopScanner();
+        }
+    }
 
-// 產生 Token
-const token = generate14DigitToken('711');
-console.log('生成的 14 碼 Token:', token); 
-// 輸出範例： 71126090198218
+    function handleScannedResult(text, format) {
+        isScanning = false;
+        const typeSelect = document.getElementById('barcodeType');
+        
+        // 嘗試解析掃描內容是否為 POS JSON 格式
+        try {
+            const parsed = JSON.parse(text);
+            if (parsed.Goods && parsed.Goods[0]?.Commodity[0]?.Barcode) {
+                const innerBarcode = parsed.Goods[0].Commodity[0].Barcode;
+                const innerQty = parsed.Goods[0].Commodity[0].Quantity || 1;
+                
+                document.getElementById('barcodeData').value = innerBarcode;
+                document.getElementById('barcodeQty').value = innerQty;
+                
+                typeSelect.value = 'QRCODE';
+                stopScanner();
+                validateAndUpdate();
+                alert(`🎉 成功辨識 QR Code！\n條碼：${innerBarcode}\n數量：${innerQty}`);
+                return;
+            }
+        } catch(e) {
+            // 非 JSON 格式（純文字或一維條碼）
+        }
 
-// 驗證生成的 Token
-const isValid = validateLuhnToken(token);
-console.log('Token 驗證結果:', isValid ? '通過 (Valid)' : '失敗 (Invalid)');
+        document.getElementById('barcodeData').value = text;
+        const fmtStr = String(format).toLowerCase();
 
-// 測試刷錯一個數字時的驗證
-const badToken = token.slice(0, 12) + '9' + token.slice(13); // 倒數第二碼打錯
-console.log('打錯單碼的驗證結果:', validateLuhnToken(badToken)); // 輸出: false
+        if (fmtStr.includes('qr')) {
+            typeSelect.value = 'QRCODE';
+        } else if (fmtStr.includes('ean_13') || fmtStr.includes('ean13')) {
+            typeSelect.value = 'EAN13';
+        } else if (fmtStr.includes('ean_8') || fmtStr.includes('ean8')) {
+            typeSelect.value = 'EAN8';
+        } else {
+            typeSelect.value = 'CODE128';
+        }
+
+        stopScanner();
+        validateAndUpdate();
+        alert(`🎉 成功辨識條碼：${text}`);
+    }
+
+    function stopScanner() {
+        isScanning = false;
+        document.getElementById('scannerModal').style.display = 'none';
+
+        if (scanStream) {
+            scanStream.getTracks().forEach(track => track.stop());
+            scanStream = null;
+        }
+        if (codeReader) {
+            codeReader.reset();
+            codeReader = null;
+        }
+    }
+</script>
+
+</body>
+</html>
