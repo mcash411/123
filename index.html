@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>結帳條碼批量輸出與獨立編輯排版系統</title>
+    <title>商品條碼批量輸出與獨立編輯系統</title>
     <!-- 載入條碼與 QR Code 繪製套件 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -12,9 +12,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
-            --711-green: #00805a;
-            --711-red: #e31837;
-            --711-orange: #f58220;
+            --primary-green: #00805a;
+            --primary-red: #e31837;
+            --primary-orange: #f58220;
             --bg-color: #f1f5f9;
             --card-bg: #ffffff;
         }
@@ -47,7 +47,7 @@
         .header {
             text-align: center;
             padding-bottom: 12px;
-            border-bottom: 3px solid var(--711-green);
+            border-bottom: 3px solid var(--primary-green);
             margin-bottom: 16px;
         }
 
@@ -62,7 +62,7 @@
         }
 
         .badge {
-            background-color: var(--711-red);
+            background-color: var(--primary-red);
             color: white;
             font-size: 11px;
             padding: 2px 8px;
@@ -86,9 +86,9 @@
 
         .btn-tool {
             padding: 10px;
-            border: 1px solid var(--711-green);
+            border: 1px solid var(--primary-green);
             background-color: #f0fdf4;
-            color: var(--711-green);
+            color: var(--primary-green);
             border-radius: 8px;
             font-size: 13px;
             font-weight: 600;
@@ -101,7 +101,7 @@
         }
 
         .btn-tool:hover {
-            background-color: var(--711-green);
+            background-color: var(--primary-green);
             color: #fff;
         }
 
@@ -141,7 +141,7 @@
             border-radius: 12px;
             overflow: hidden;
             background: #000;
-            border: 3px solid var(--711-green);
+            border: 3px solid var(--primary-green);
         }
 
         #video {
@@ -248,8 +248,8 @@
         }
 
         .btn-sens.active {
-            background-color: var(--711-green);
-            border-color: var(--711-green);
+            background-color: var(--primary-green);
+            border-color: var(--primary-green);
             font-weight: bold;
         }
 
@@ -266,7 +266,7 @@
         /* 獨立商品修改控制區塊 */
         .editor-card {
             background-color: #f0fdf4;
-            border: 2px solid var(--711-green);
+            border: 2px solid var(--primary-green);
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 16px;
@@ -275,7 +275,7 @@
         .editor-header {
             font-size: 13px;
             font-weight: bold;
-            color: var(--711-green);
+            color: var(--primary-green);
             margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
@@ -330,7 +330,7 @@
 
         .item-list-row.active {
             background-color: #e6f2ed;
-            border-left: 4px solid var(--711-green);
+            border-left: 4px solid var(--primary-green);
         }
 
         .item-info {
@@ -415,14 +415,14 @@
         }
 
         .btn-toggle:hover {
-            border-color: var(--711-green);
-            color: var(--711-green);
+            border-color: var(--primary-green);
+            color: var(--primary-green);
         }
 
         .btn-toggle.active {
-            background-color: var(--711-green);
+            background-color: var(--primary-green);
             color: #ffffff;
-            border-color: var(--711-green);
+            border-color: var(--primary-green);
             box-shadow: 0 2px 4px rgba(0, 128, 90, 0.2);
         }
 
@@ -444,7 +444,7 @@
 
         .btn-del {
             background: #fee2e2;
-            color: var(--711-red);
+            color: var(--primary-red);
             border: none;
             border-radius: 6px;
             padding: 4px 8px;
@@ -477,7 +477,7 @@
         }
 
         .btn-primary {
-            background-color: var(--711-green);
+            background-color: var(--primary-green);
             color: white;
             border: none;
         }
@@ -497,7 +497,7 @@
         }
 
         .btn-print {
-            background-color: var(--711-orange);
+            background-color: var(--primary-orange);
             color: white;
             border: none;
         }
@@ -508,7 +508,7 @@
 
         .status-msg {
             font-size: 12px;
-            color: var(--711-green);
+            color: var(--primary-green);
             text-align: center;
             margin-bottom: 8px;
             display: none;
@@ -575,9 +575,9 @@
         }
 
         .download-single-btn:hover {
-            background: var(--711-green);
+            background: var(--primary-green);
             color: #ffffff;
-            border-color: var(--711-green);
+            border-color: var(--primary-green);
         }
 
         .barcode-note-container {
@@ -653,7 +653,7 @@
 <div class="no-print">
     <div class="app-card">
         <div class="header">
-            <h1>7-11 條碼批量輸出與獨立編輯系統 <span class="badge">POS 專用</span></h1>
+            <h1>商品條碼批量輸出與獨立編輯系統 <span class="badge">通用版</span></h1>
         </div>
 
         <div class="tools-header">
@@ -704,7 +704,7 @@
             <div class="editor-row">
                 <div class="form-group flex-2">
                     <label for="editNoteInput">條碼備註 (名稱/說明)</label>
-                    <input type="text" id="editNoteInput" placeholder="例如：大冰拿/御飯糰" oninput="saveCurrentEdit()">
+                    <input type="text" id="editNoteInput" placeholder="例如：商品名稱" oninput="saveCurrentEdit()">
                 </div>
                 <div class="form-group flex-3">
                     <label for="editBarcodeInput">商品條碼 (Barcode)</label>
@@ -729,14 +729,13 @@
         </div>
         <div class="layout-controls-container">
             <div class="control-block">
-                <label>條碼輸出類型</label>
+                <label>條碼輸出類型 (控制一維、二維或組合顯示)</label>
                 <div class="btn-toggle-group" id="barcodeTypeToggleGroup">
-                    <button class="btn-toggle" data-type="ean8" onclick="setBarcodeType('ean8')">EAN-8</button>
-                    <button class="btn-toggle" data-type="ean13" onclick="setBarcodeType('ean13')">EAN-13</button>
-                    <button class="btn-toggle" data-type="code128" onclick="setBarcodeType('code128')">Code128</button>
-                    <button class="btn-toggle active" data-type="1d" onclick="setBarcodeType('1d')">一維條碼</button>
-                    <button class="btn-toggle" data-type="qrcode" onclick="setBarcodeType('qrcode')">二維條碼</button>
-                    <button class="btn-toggle" data-type="both" onclick="setBarcodeType('both')">一維 + 二維</button>
+                    <button class="btn-toggle" data-type="ean8" onclick="setBarcodeType('ean8')">僅EAN-8</button>
+                    <button class="btn-toggle" data-type="ean13" onclick="setBarcodeType('ean13')">僅EAN-13</button>
+                    <button class="btn-toggle" data-type="code128" onclick="setBarcodeType('code128')">僅Code128</button>
+                    <button class="btn-toggle" data-type="qrcode" onclick="setBarcodeType('qrcode')">僅二維條碼</button>
+                    <button class="btn-toggle active" data-type="both" onclick="setBarcodeType('both')">一維 + 二維</button>
                 </div>
             </div>
 
@@ -766,7 +765,7 @@
         </div>
 
         <div class="section-title">
-            <span>7-11 POS 數據 JSON (自動即時同步)</span>
+            <span>商品條碼數據 JSON (自動即時同步)</span>
         </div>
         <textarea id="jsonInput" spellcheck="false"></textarea>
     </div>
@@ -774,7 +773,7 @@
 
 <div class="print-layout-container">
     <div id="outputHeader" style="text-align: center; margin-bottom: 12px; font-weight: bold; font-size: 14px;">
-        結帳條碼標籤列印預覽 (<span id="labelCountBadge">0</span> 張)
+        商品條碼標籤列印預覽 (<span id="labelCountBadge">0</span> 張)
     </div>
 
     <div class="barcode-grid grid-cols-2" id="barcodeGrid"></div>
@@ -782,11 +781,11 @@
 
 <script>
     let itemsData = [
-        { note: "7-11商品", barcode: "20719128", quantity: 1 }
+        { note: "7-11一元購物袋", barcode: "20719128", quantity: 1 }
     ];
     let selectedIndex = 0;
 
-    let currentBarcodeType = '1d';
+    let currentBarcodeType = 'both';
     let currentLayoutColumns = 2;
     let currentRepeatQty = true;
 
@@ -847,6 +846,18 @@
             return "EAN-13";
         } else {
             return "Code128";
+        }
+    }
+
+    // 智慧取得一維條碼格式：完全依據條碼內容位數自動判斷，不受頂部輸出類型按鈕切換影響
+    function getSmartBarcodeFormat(barcodeStr) {
+        const clean = (barcodeStr || '').trim();
+        if (/^\d{7,8}$/.test(clean)) {
+            return "EAN8";
+        } else if (/^\d{12,13}$/.test(clean)) {
+            return "EAN13";
+        } else {
+            return "CODE128";
         }
     }
 
@@ -917,7 +928,6 @@
         renderLayoutGridUI();
     }
 
-    // 光線自適應強化二值化 Canvas
     function enhanceLightAndContrast(sourceCanvas) {
         const tempCanvas = document.createElement('canvas');
         tempCanvas.width = sourceCanvas.width;
@@ -954,7 +964,6 @@
         return tempCanvas;
     }
 
-    // 初始化硬體加速原生 BarcodeDetector API 與 ZXing 解碼器
     async function initBarcodeDecoders() {
         if ('BarcodeDetector' in window) {
             try {
@@ -985,7 +994,6 @@
         }
     }
 
-    // 開啟相機自動辨識 (重構動畫幀與原生 API / Canvas 相容掃描)
     async function startCameraScan() {
         const container = document.getElementById('scanner-container');
         container.style.display = 'block';
@@ -1014,9 +1022,8 @@
             if (animFrameId) cancelAnimationFrame(animFrameId);
             isProcessingFrame = false;
 
-            // 啟動 requestAnimationFrame 畫素影格比對機制
             const processLoop = async (timestamp) => {
-                if (!mediaStream) return; // 鏡頭已關閉
+                if (!mediaStream) return;
 
                 if (video && video.videoWidth > 0 && video.readyState === 4) {
                     if (timestamp - lastScanTimestamp >= currentSensitivityMs && !isProcessingFrame) {
@@ -1029,7 +1036,6 @@
 
                         let detectedText = null;
 
-                        // 階段 1：優先調用瀏覽器原生硬體加速解碼 (極速)
                         if (nativeDetector) {
                             try {
                                 const barcodes = await nativeDetector.detect(snapCanvas);
@@ -1039,7 +1045,6 @@
                             } catch (errNative) {}
                         }
 
-                        // 階段 2：若原生 API 未抓到，調用 ZXing Canvas 解碼
                         if (!detectedText && codeReader) {
                             try {
                                 const res = await codeReader.decodeFromCanvas(snapCanvas);
@@ -1047,7 +1052,6 @@
                                     detectedText = res.text.trim();
                                 }
                             } catch (errZXing) {
-                                // 階段 3：光線與黑白二值化強化解碼
                                 try {
                                     const enhanced = enhanceLightAndContrast(snapCanvas);
                                     const res2 = await codeReader.decodeFromCanvas(enhanced);
@@ -1090,17 +1094,13 @@
     function appendRecognizedBarcode(barcodeStr) {
         if (itemsData[selectedIndex] && (itemsData[selectedIndex].barcode === "" || itemsData[selectedIndex].barcode === undefined)) {
             itemsData[selectedIndex].barcode = barcodeStr;
-            if (!itemsData[selectedIndex].note) {
-                itemsData[selectedIndex].note = `掃描商品${selectedIndex + 1}`;
-            }
         } else {
-            itemsData.push({ note: `掃描商品${itemsData.length + 1}`, barcode: barcodeStr, quantity: 1 });
+            itemsData.push({ note: "", barcode: barcodeStr, quantity: 1 });
             selectedIndex = itemsData.length - 1;
         }
         renderAll();
     }
 
-    // 處理辨識成果 (自動將資料帶入輸入框，並帶入目前選取的品項)
     function processScannedResult(scannedBarcode) {
         if (!scannedBarcode) return;
         const now = Date.now();
@@ -1112,7 +1112,6 @@
         lastScannedCode = scannedBarcode;
         lastScanTime = now;
 
-        // 若為 7-11 POS JSON 二維條碼
         try {
             const data = JSON.parse(scannedBarcode);
             if (data && data.Goods && data.Goods[0] && Array.isArray(data.Goods[0].Commodity)) {
@@ -1129,7 +1128,7 @@
                     }
                     renderAll();
                     focusOnEditNote();
-                    showStatus(`📸 已成功解析 7-11 POS 二維條碼！自動帶入：${item.Barcode}`);
+                    showStatus(`📸 已成功解析條碼數據！自動帶入：${item.Barcode}`);
                     return;
                 }
             }
@@ -1160,7 +1159,6 @@
         document.getElementById('scanner-container').style.display = 'none';
     }
 
-    // 2. 上傳圖片檔自動辨識（自動帶入輸入資訊）
     async function scanImageFile(input) {
         if (!input.files || !input.files[0]) return;
         const file = input.files[0];
@@ -1171,7 +1169,6 @@
             await initBarcodeDecoders();
             let scannedBarcode = null;
 
-            // 1. 原生 API 解碼圖片
             if (nativeDetector) {
                 try {
                     const barcodes = await nativeDetector.detect(img);
@@ -1181,7 +1178,6 @@
                 } catch (e) {}
             }
 
-            // 2. ZXing 解碼圖片
             if (!scannedBarcode && codeReader) {
                 try {
                     const result = await codeReader.decodeFromImageElement(img);
@@ -1194,7 +1190,6 @@
             if (scannedBarcode) {
                 playBeepSound();
 
-                // JSON 解析檢查
                 try {
                     const data = JSON.parse(scannedBarcode);
                     if (data && data.Goods && data.Goods[0] && Array.isArray(data.Goods[0].Commodity)) {
@@ -1205,7 +1200,7 @@
                             if (item.Note) itemsData[selectedIndex].note = item.Note;
                             renderAll();
                             focusOnEditNote();
-                            showStatus(`✅ 圖片 JSON 解析成功！已自動帶入資訊`);
+                            showStatus(`✅ 圖片數據解析成功！已自動帶入資訊`);
                             input.value = '';
                             return;
                         }
@@ -1223,13 +1218,12 @@
         };
     }
 
-    // 3. 剪貼簿與文字自動辨識
     async function autoPasteAndRecognize() {
         try {
             const text = await navigator.clipboard.readText();
             recognizeTextContent(text);
         } catch (err) {
-            const text = prompt("請貼上包含條碼或 7-11 JSON 的內容：");
+            const text = prompt("請貼上包含條碼或相關資料的內容：");
             if (text) recognizeTextContent(text);
         }
     }
@@ -1242,14 +1236,14 @@
             const data = JSON.parse(text);
             if (data && data.Goods && data.Goods[0] && Array.isArray(data.Goods[0].Commodity)) {
                 itemsData = data.Goods[0].Commodity.map((c, i) => ({
-                    note: c.Note || `商品${i+1}`,
+                    note: c.Note || (i === 0 ? "7-11一元購物袋" : ""),
                     barcode: String(c.Barcode || ''),
                     quantity: c.Quantity || 1
                 }));
                 selectedIndex = 0;
                 playBeepSound();
                 renderAll();
-                showStatus('✅ 已成功匯入 7-11 POS JSON 數據');
+                showStatus('✅ 已成功匯入數據');
                 return;
             }
         } catch (e) {}
@@ -1264,9 +1258,8 @@
         }
     }
 
-    // 批量文字匯入
     function batchImportPrompt() {
-        const input = prompt("請貼上批量資料 (每行一筆，格式如：備註,條碼,數量 或 條碼,數量)：\n範例：\n御飯糰,20719128,2\n4710088431021,1");
+        const input = prompt("請貼上批量資料 (每行一筆，格式如：備註,條碼,數量 或 條碼,數量)：\n範例：\n7-11一元購物袋,20719128,2\n87654321,1");
         if (!input) return;
 
         const lines = input.split('\n');
@@ -1281,12 +1274,12 @@
                 newItems.push({ note: parts[0], barcode: parts[1], quantity: parseInt(parts[2], 10) || 1 });
             } else if (parts.length === 2) {
                 if (/^\d+$/.test(parts[0])) {
-                    newItems.push({ note: `商品${idx+1}`, barcode: parts[0], quantity: parseInt(parts[1], 10) || 1 });
+                    newItems.push({ note: idx === 0 ? "7-11一元購物袋" : "", barcode: parts[0], quantity: parseInt(parts[1], 10) || 1 });
                 } else {
                     newItems.push({ note: parts[0], barcode: parts[1], quantity: 1 });
                 }
             } else if (parts.length === 1 && parts[0]) {
-                newItems.push({ note: `商品${idx+1}`, barcode: parts[0], quantity: 1 });
+                newItems.push({ note: idx === 0 ? "7-11一元購物袋" : "", barcode: parts[0], quantity: 1 });
             }
         });
 
@@ -1301,7 +1294,6 @@
         }
     }
 
-    // 渲染清單
     function renderItemsListUI() {
         const container = document.getElementById('itemsListContainer');
         container.innerHTML = '';
@@ -1320,7 +1312,7 @@
             row.innerHTML = `
                 <div class="item-info">
                     <span style="font-weight:bold; color:#64748b; font-size:12px;">#${index + 1}</span>
-                    <span class="item-note-text">${item.note || '未命名商品'}</span>
+                    <span class="item-note-text">${item.note || '(無備註)'}</span>
                     <span class="item-barcode-text">${item.barcode || '(無條碼)'}</span>
                     <span class="item-format-badge">${formatTag}</span>
                 </div>
@@ -1366,7 +1358,7 @@
             const barcodeEl = rows[selectedIndex].querySelector('.item-barcode-text');
             const formatEl = rows[selectedIndex].querySelector('.item-format-badge');
             const qtyEl = rows[selectedIndex].querySelector('.item-qty-badge');
-            if (noteEl) noteEl.innerText = noteVal || '未命名商品';
+            if (noteEl) noteEl.innerText = noteVal || '(無備註)';
             if (barcodeEl) barcodeEl.innerText = barcodeVal || '(無條碼)';
             if (formatEl) formatEl.innerText = barcodeVal ? detectBarcodeFormat(barcodeVal) : '未設定';
             if (qtyEl) qtyEl.innerText = `x${qtyVal}`;
@@ -1469,7 +1461,7 @@
             for (let i = 0; i < count; i++) {
                 printList.push({
                     originalIndex: index,
-                    note: item.note || `商品${index+1}`,
+                    note: item.note || "",
                     barcode: item.barcode,
                     quantity: item.quantity,
                     copySeq: i + 1
@@ -1499,50 +1491,48 @@
             card.id = `barcode-card-${idx}`;
 
             let contentHTML = '';
-            if (currentBarcodeType === 'qrcode') {
+            const show1D = (currentBarcodeType !== 'qrcode');
+            const show2D = (currentBarcodeType === 'qrcode' || currentBarcodeType === 'both');
+
+            if (show1D && !show2D) {
+                contentHTML = `<svg id="svg-code-${idx}" class="barcode-svg"></svg>`;
+            } else if (!show1D && show2D) {
                 contentHTML = `<div class="qr-canvas-box" id="qr-box-${idx}"></div>`;
-            } else if (currentBarcodeType === 'both') {
+            } else {
                 contentHTML = `
                     <div class="barcode-content-stacked">
                         <div class="qr-canvas-box" id="qr-box-${idx}"></div>
                         <svg id="svg-code-${idx}" class="barcode-svg"></svg>
                     </div>
                 `;
-            } else {
-                contentHTML = `<svg id="svg-code-${idx}" class="barcode-svg"></svg>`;
             }
 
-            const cleanFileName = labelItem.note.replace(/[\\/:*?"<>|]/g, "_");
+            const cleanFileName = labelItem.note ? labelItem.note.replace(/[\\/:*?"<>|]/g, "_") : `標籤_${idx+1}`;
 
-            card.innerHTML = `
+            const noteHtmlBlock = labelItem.note ? `
                 <div class="barcode-note-container">
                     <span class="barcode-note-text">${labelItem.note}</span>
                 </div>
+            ` : '';
+
+            card.innerHTML = `
+                ${noteHtmlBlock}
                 ${contentHTML}
                 <button class="download-single-btn no-print" onclick="downloadSingleBarcodeImage(${idx}, '${cleanFileName}')">💾 下載</button>
             `;
             grid.appendChild(card);
 
-            if (currentBarcodeType !== 'qrcode' && labelItem.barcode) {
+            if (show1D && labelItem.barcode) {
                 const svgId = `#svg-code-${idx}`;
-                let formatToUse = "CODE128";
-
-                if (currentBarcodeType === 'ean13') {
-                    formatToUse = (/^\d{12,13}$/.test(labelItem.barcode)) ? "EAN13" : "CODE128";
-                } else if (currentBarcodeType === 'ean8') {
-                    formatToUse = (/^\d{7,8}$/.test(labelItem.barcode)) ? "EAN8" : "CODE128";
-                } else if (currentBarcodeType === '1d') {
-                    if (/^\d{12,13}$/.test(labelItem.barcode)) formatToUse = "EAN13";
-                    else if (/^\d{7,8}$/.test(labelItem.barcode)) formatToUse = "EAN8";
-                    else formatToUse = "CODE128";
-                }
+                // 強制使用智慧自動偵測格式，不受頂部輸出類型按鈕影響
+                let formatToUse = getSmartBarcodeFormat(labelItem.barcode);
 
                 try {
                     JsBarcode(svgId, labelItem.barcode, {
                         format: formatToUse,
                         lineColor: "#000",
                         width: barWidth,
-                        height: currentBarcodeType === 'both' ? Math.max(28, barHeight - 14) : barHeight,
+                        height: show2D ? Math.max(28, barHeight - 14) : barHeight,
                         displayValue: true,
                         fontSize: currentLayoutColumns >= 3 ? 11 : 12,
                         margin: 2
@@ -1553,7 +1543,7 @@
                             format: "CODE128",
                             lineColor: "#000",
                             width: barWidth,
-                            height: currentBarcodeType === 'both' ? Math.max(28, barHeight - 14) : barHeight,
+                            height: show2D ? Math.max(28, barHeight - 14) : barHeight,
                             displayValue: true,
                             fontSize: currentLayoutColumns >= 3 ? 11 : 12,
                             margin: 2
@@ -1564,7 +1554,7 @@
                 }
             }
 
-            if ((currentBarcodeType === 'qrcode' || currentBarcodeType === 'both') && labelItem.barcode) {
+            if (show2D && labelItem.barcode) {
                 const formattedBarcode = /^\d+$/.test(labelItem.barcode) ? Number(labelItem.barcode) : labelItem.barcode;
                 
                 const itemJsonObj = {
@@ -1572,7 +1562,7 @@
                         {
                             "Commodity": [
                                 {
-                                    "Device": "POS",
+                                    "Device": "System",
                                     "Barcode": formattedBarcode,
                                     "Quantity": labelItem.quantity || 1
                                 }
@@ -1582,7 +1572,7 @@
                 };
                 const itemJson = JSON.stringify(itemJsonObj);
 
-                const targetQrWidth = currentBarcodeType === 'both' ? Math.max(50, qrWidth - 20) : qrWidth;
+                const targetQrWidth = show1D ? Math.max(50, qrWidth - 20) : qrWidth;
 
                 setTimeout(() => {
                     const qrBox = document.getElementById(`qr-box-${idx}`);
@@ -1609,7 +1599,7 @@
     }
 
     function addItemRow() {
-        itemsData.push({ note: `商品${itemsData.length+1}`, barcode: "", quantity: 1 });
+        itemsData.push({ note: "", barcode: "", quantity: 1 });
         selectedIndex = itemsData.length - 1;
         renderAll();
     }
@@ -1627,7 +1617,7 @@
     }
 
     function clearAllItems() {
-        itemsData = [{ note: "商品1", barcode: "", quantity: 1 }];
+        itemsData = [{ note: "", barcode: "", quantity: 1 }];
         selectedIndex = 0;
         renderAll();
     }
@@ -1638,7 +1628,7 @@
         const commodityArray = itemsData.map(item => {
             const formattedBarcode = /^\d+$/.test(item.barcode) ? Number(item.barcode) : item.barcode;
             return {
-                "Device": "POS",
+                "Device": "System",
                 "Barcode": formattedBarcode,
                 "Quantity": item.quantity,
                 "Note": item.note || ""
@@ -1666,7 +1656,7 @@
             if (parsed && parsed.Goods && parsed.Goods[0] && Array.isArray(parsed.Goods[0].Commodity)) {
                 isUpdatingFromJson = true;
                 itemsData = parsed.Goods[0].Commodity.map((c, i) => ({
-                    note: c.Note || `商品${i+1}`,
+                    note: c.Note || "",
                     barcode: String(c.Barcode || ''),
                     quantity: c.Quantity || 1
                 }));
