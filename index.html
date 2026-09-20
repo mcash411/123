@@ -21,6 +21,7 @@
 
         * {
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -29,6 +30,7 @@
             margin: 0;
             padding: 16px;
             color: #1e293b;
+            line-height: 1.5;
         }
 
         .no-print {
@@ -59,6 +61,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            flex-wrap: wrap;
         }
 
         .badge {
@@ -85,7 +88,7 @@
         }
 
         .btn-tool {
-            padding: 10px;
+            padding: 12px;
             border: 1px solid var(--primary-green);
             background-color: #f0fdf4;
             color: var(--primary-green);
@@ -98,9 +101,10 @@
             justify-content: center;
             gap: 6px;
             transition: all 0.2s;
+            touch-action: manipulation;
         }
 
-        .btn-tool:hover {
+        .btn-tool:hover, .btn-tool:active {
             background-color: var(--primary-green);
             color: #fff;
         }
@@ -124,7 +128,7 @@
             display: flex;
             align-items: center;
             gap: 4px;
-            padding: 2px 6px;
+            padding: 6px 10px;
             border-radius: 4px;
         }
 
@@ -169,7 +173,7 @@
             background: rgba(0, 128, 90, 0.92);
             color: #ffffff;
             font-size: 12px;
-            padding: 5px 16px;
+            padding: 6px 16px;
             border-radius: 16px;
             font-weight: bold;
             letter-spacing: 0.5px;
@@ -195,8 +199,8 @@
             color: #fff;
             border: none;
             border-radius: 50%;
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             cursor: pointer;
             font-weight: bold;
             font-size: 16px;
@@ -213,7 +217,7 @@
             left: 12px;
             background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(4px);
-            padding: 4px 12px;
+            padding: 6px 12px;
             border-radius: 20px;
             display: flex;
             flex-direction: row;
@@ -240,7 +244,7 @@
             border: 1px solid rgba(255,255,255,0.4);
             color: #ffffff;
             font-size: 11px;
-            padding: 2px 8px;
+            padding: 3px 8px;
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.15s;
@@ -306,7 +310,7 @@
 
         /* 批量清單展示 */
         .items-list-wrapper {
-            max-height: 200px;
+            max-height: 220px;
             overflow-y: auto;
             border: 1px solid #cbd5e1;
             border-radius: 8px;
@@ -318,7 +322,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 12px;
+            padding: 12px;
             border-bottom: 1px solid #f1f5f9;
             cursor: pointer;
             transition: background 0.15s;
@@ -338,12 +342,13 @@
             gap: 12px;
             align-items: center;
             font-size: 13px;
+            flex-wrap: wrap;
         }
 
         .item-note-text {
             font-weight: bold;
             color: #0f172a;
-            min-width: 100px;
+            min-width: 90px;
         }
 
         .item-barcode-text {
@@ -355,7 +360,7 @@
             font-size: 10px;
             background-color: #dbeafe;
             color: #1e40af;
-            padding: 1px 6px;
+            padding: 2px 6px;
             border-radius: 4px;
             font-weight: 600;
         }
@@ -401,8 +406,8 @@
 
         .btn-toggle {
             flex: 1;
-            min-width: 70px;
-            padding: 8px 10px;
+            min-width: 75px;
+            padding: 10px;
             font-size: 12px;
             font-weight: 600;
             border: 1px solid #cbd5e1;
@@ -412,6 +417,7 @@
             cursor: pointer;
             transition: all 0.15s ease-in-out;
             text-align: center;
+            touch-action: manipulation;
         }
 
         .btn-toggle:hover {
@@ -428,15 +434,15 @@
 
         input[type="text"], input[type="number"], textarea {
             width: 100%;
-            padding: 8px 10px;
+            padding: 10px;
             border: 1px solid #cbd5e1;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 14px;
             background-color: #fff;
         }
 
         textarea {
-            height: 75px;
+            height: 80px;
             font-family: monospace;
             font-size: 12px;
             resize: vertical;
@@ -447,9 +453,10 @@
             color: var(--primary-red);
             border: none;
             border-radius: 6px;
-            padding: 4px 8px;
+            padding: 6px 10px;
             cursor: pointer;
             font-weight: bold;
+            touch-action: manipulation;
         }
 
         .btn-del:hover {
@@ -465,7 +472,8 @@
 
         .btn {
             flex: 1;
-            padding: 10px 14px;
+            min-width: 130px;
+            padding: 12px;
             border: 1px solid #cbd5e1;
             background: white;
             border-radius: 8px;
@@ -474,6 +482,7 @@
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
+            touch-action: manipulation;
         }
 
         .btn-primary {
@@ -513,7 +522,7 @@
             margin-bottom: 8px;
             display: none;
             background-color: #e6f2ed;
-            padding: 6px;
+            padding: 8px;
             border-radius: 6px;
         }
 
@@ -569,9 +578,10 @@
             border: 1px solid #cbd5e1;
             border-radius: 4px;
             font-size: 10px;
-            padding: 2px 6px;
+            padding: 3px 6px;
             cursor: pointer;
             transition: all 0.15s;
+            touch-action: manipulation;
         }
 
         .download-single-btn:hover {
@@ -719,7 +729,7 @@
 
         <div class="section-title">
             <span>商品批量清單 (<span id="itemCount">1</span> 項 - 點選項目進行修改)</span>
-            <button class="btn btn-primary" style="flex:none; padding:4px 10px;" onclick="addItemRow()">+ 新增品項</button>
+            <button class="btn btn-primary" style="flex:none; padding:8px 14px;" onclick="addItemRow()">+ 新增品項</button>
         </div>
 
         <div class="items-list-wrapper" id="itemsListContainer"></div>
@@ -731,9 +741,7 @@
             <div class="control-block">
                 <label>條碼輸出類型 (控制一維、二維或組合顯示)</label>
                 <div class="btn-toggle-group" id="barcodeTypeToggleGroup">
-                    <button class="btn-toggle" data-type="ean8" onclick="setBarcodeType('ean8')">僅EAN-8</button>
-                    <button class="btn-toggle" data-type="ean13" onclick="setBarcodeType('ean13')">僅EAN-13</button>
-                    <button class="btn-toggle" data-type="code128" onclick="setBarcodeType('code128')">僅Code128</button>
+                    <button class="btn-toggle" data-type="oned" onclick="setBarcodeType('oned')">僅一維條碼</button>
                     <button class="btn-toggle" data-type="qrcode" onclick="setBarcodeType('qrcode')">僅二維條碼</button>
                     <button class="btn-toggle active" data-type="both" onclick="setBarcodeType('both')">一維 + 二維</button>
                 </div>
@@ -752,16 +760,16 @@
             <div class="control-block">
                 <label>數量自動重複產生標籤</label>
                 <div class="btn-toggle-group" id="repeatToggleGroup">
-                    <button class="btn-toggle active" onclick="setRepeatQty(true)">是 (依數量複製多張)</button>
-                    <button class="btn-toggle" onclick="setRepeatQty(false)">否 (僅顯示單張貼紙)</button>
+                    <button class="btn-toggle active" onclick="setRepeatQty(true)">是 (依數量複製)</button>
+                    <button class="btn-toggle" onclick="setRepeatQty(false)">否 (僅顯示單張)</button>
                 </div>
             </div>
         </div>
 
         <div class="action-btns">
             <button class="btn" onclick="clearAllItems()">🗑️ 清空列表</button>
-            <button class="btn btn-save" onclick="downloadAllBarcodeImages()">📥 批量下載所有條碼圖片</button>
-            <button class="btn btn-print" onclick="window.print()">🖨️ 列印標籤貼紙 / 輸出 PDF</button>
+            <button class="btn btn-save" onclick="downloadAllBarcodeImages()">📥 批量下載圖片</button>
+            <button class="btn btn-print" onclick="window.print()">🖨️ 列印標籤貼紙</button>
         </div>
 
         <div class="section-title">
@@ -801,6 +809,20 @@
     let isProcessingFrame = false;
     let currentSensitivityMs = 180;
     let showCollapsibleTools = false;
+
+    function setBarcodeType(type) {
+        currentBarcodeType = type;
+        const group = document.getElementById('barcodeTypeToggleGroup');
+        const btns = group.querySelectorAll('.btn-toggle');
+        btns.forEach(btn => {
+            if (btn.getAttribute('data-type') === type) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+        renderLayoutGridUI();
+    }
 
     function toggleCollapsibleTools() {
         showCollapsibleTools = !showCollapsibleTools;
@@ -849,7 +871,6 @@
         }
     }
 
-    // 智慧取得一維條碼格式：完全依據條碼內容位數自動判斷，不受頂部輸出類型按鈕切換影響
     function getSmartBarcodeFormat(barcodeStr) {
         const clean = (barcodeStr || '').trim();
         if (/^\d{7,8}$/.test(clean)) {
@@ -1076,7 +1097,8 @@
             animFrameId = requestAnimationFrame(processLoop);
 
         } catch (err) {
-            alert('無法開啟相機鏡頭，請確認存取權限：' + err);
+            console.error('Camera access error:', err);
+            showStatus('無法開啟相機鏡頭，請確認瀏覽器權限。');
             stopCameraScan();
         }
     }
@@ -1212,7 +1234,7 @@
                 const detectedFormat = detectBarcodeFormat(scannedBarcode);
                 showStatus(`✅ 圖片解析成功！已自動帶入 [${detectedFormat}] 條碼：` + scannedBarcode);
             } else {
-                alert('圖片中未辨識出可讀取的條碼或 QR Code。');
+                showStatus('圖片中未辨識出可讀取的條碼或 QR Code。');
             }
             input.value = '';
         };
@@ -1254,7 +1276,7 @@
             matches.forEach(bc => appendRecognizedBarcode(bc));
             showStatus(`✅ 已從剪貼簿解析並新增 ${matches.length} 筆條碼`);
         } else {
-            alert('未能在輸入內容中識別出有效條碼！');
+            showStatus('未能在輸入內容中識別出有效條碼！');
         }
     }
 
@@ -1290,7 +1312,7 @@
             renderAll();
             showStatus(`✅ 已成功匯入 ${newItems.length} 筆資料`);
         } else {
-            alert('無法解析輸入的內容！');
+            showStatus('無法解析輸入的內容！');
         }
     }
 
@@ -1420,7 +1442,7 @@
     function downloadAllBarcodeImages() {
         const cards = document.querySelectorAll('.barcode-card');
         if (!cards || cards.length === 0) {
-            alert('沒有可下載的條碼標籤！');
+            showStatus('沒有可下載的條碼標籤！');
             return;
         }
 
@@ -1524,7 +1546,6 @@
 
             if (show1D && labelItem.barcode) {
                 const svgId = `#svg-code-${idx}`;
-                // 強制使用智慧自動偵測格式，不受頂部輸出類型按鈕影響
                 let formatToUse = getSmartBarcodeFormat(labelItem.barcode);
 
                 try {
@@ -1562,9 +1583,10 @@
                         {
                             "Commodity": [
                                 {
-                                    "Device": "System",
+                                    "Device": "POS",
                                     "Barcode": formattedBarcode,
-                                    "Quantity": labelItem.quantity || 1
+                                    "Quantity": labelItem.quantity || 1,
+                                    "Note": labelItem.note || ""
                                 }
                             ]
                         }
@@ -1606,7 +1628,7 @@
 
     function removeItemRow(index) {
         if (itemsData.length <= 1) {
-            alert('至少需保留一項商品！');
+            showStatus('至少需保留一項商品！');
             return;
         }
         itemsData.splice(index, 1);
@@ -1628,7 +1650,7 @@
         const commodityArray = itemsData.map(item => {
             const formattedBarcode = /^\d+$/.test(item.barcode) ? Number(item.barcode) : item.barcode;
             return {
-                "Device": "System",
+                "Device": "POS",
                 "Barcode": formattedBarcode,
                 "Quantity": item.quantity,
                 "Note": item.note || ""
